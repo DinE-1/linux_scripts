@@ -14,18 +14,23 @@ max_brightness=$(cat "$backlight_dir"/max_brightness)
 #current brightness
 current_brightness=$(cat $backlight_dir/brightness)
 
-#value to change brightness
-brightness_change_percent=$1
-#inc/dec brightness var
-brightness_change=$((max_brightness*brightness_change_percent/100))
+brightness_change_value=$1
+##detecting if percentage or not
+#if there no is 'r'(short for raw) treat first arguement as percentage, else as direct value to write in brightness file
+if [[ "$2" == "-"*"r"* ]]; then
+	brightness_change=$((brightness_change_value))
+else
+	brightness_change=$((max_brightness*brightness_change_value/100))
+fi
 
 #set the current brightness var value
-if [ "$2" == "-s" ]; then
+if [[ "$2" == "-"*"s"* ]]; then
 	current_brightness=$((brightness_change))
 else
 	current_brightness=$((current_brightness+brightness_change))
 fi
 
+##brightness limit control
 #set brightness to 0 if current brightness is negative
 if [[ $current_brightness -lt 0 ]]; then
 	current_brightness=0
