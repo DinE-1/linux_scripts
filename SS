@@ -1,0 +1,5 @@
+#!/bin/sh
+
+selection="$(slurp)"
+grim -g "$selection"
+grim -g "${selection}" - | wl-copy
